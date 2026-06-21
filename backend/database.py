@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, ForeignKey, func
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 from dotenv import load_dotenv
 
@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 # ינסה למשוך מהקובץ, ואם ייכשל (יקבל None), ישתמש בכתובת הישירה לדוקר
 DATABASE_URL = os.getenv("DATABASE_URL") or "postgresql://postgres:mysecretpassword@localhost:5433/tokenguard_db"
+
 # אתחול מנוע ההתחברות ל-PostgreSQL
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -86,6 +87,43 @@ def log_transaction(department_key: str, prompt: str, response: str, model_used:
         print(f"[Database Error] Failed to log transaction: {e}")
     finally:
         db.close()
+
+def get_analytics_summary():
+    """שולף מדדי מפתח כלליים עבור כרטיסי המידע בדשבורד"""
+    db = SessionLocal()
+    try:
+        total_requests = db.query(Transaction).count()
+        cache_hits = db.query(Transaction).filter(Transaction.is_cached == 1).count()
+        
+        # חישוב סך החיסכון הכספי
+        total_saved = db.query(func.sum(Transaction.cost_saved)).scalar() or 0.0
+        
+        cache_hit_rate = (cache_hits / total_requests * 100) if total_requests > 0 else 0.0
+        
+        return {
+            "total_requests": total_requests,
+            "cache_hits": cache_hits,
+            "cache_hit_rate": round(cache_hit_rate, 2),
+            "total_usd_saved": round(total_saved, 4)
+        }
+    finally:
+        db.close()
+
+def get_department_budgets():
+    """שולף את מצב התקציב הנוכחי של כל המחלקות עבור גרף העמודות"""
+    db = SessionLocal()
+    try:
+        departments = db.query(Department).all()
+        return [
+            {
+                "department_name": dept.department_name,
+                "monthly_budget": dept.monthly_budget,
+                "current_spending": round(dept.current_spending, 2)
+            }
+            for dept in departments
+        ]
+    finally:
+        db.close() 
 
 # הרצת האתחול בעת עליית השרת
 init_db()

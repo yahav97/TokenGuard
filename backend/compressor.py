@@ -1,8 +1,10 @@
 from llmlingua import PromptCompressor
 
-# אתחול המודל קורה פעם אחת (בפעם הראשונה זה יוריד מודל קטן למחשב)
-
-compressor = PromptCompressor("microsoft/llmlingua-2-bert-base-multilingual-cased-meetingbank")
+# אתחול המודל עם הגדרה מפורשת לרוץ על ה-CPU
+compressor = PromptCompressor(
+    "microsoft/llmlingua-2-bert-base-multilingual-cased-meetingbank",
+    device_map="cpu"
+)
 
 def compress_prompt(prompt: str) -> str:
     if not prompt:
@@ -11,7 +13,7 @@ def compress_prompt(prompt: str) -> str:
     # כיווץ הפרומפט תוך שמירה על המשמעות הסמנטית
     results = compressor.compress_prompt(
         prompt,
-        rate=0.7, 
+        rate=0.6, # שומר 60% מהטקסט המקורי
         force_tokens=['\n', '?', '!'] # סימנים שאסור למחוק
     )
     
