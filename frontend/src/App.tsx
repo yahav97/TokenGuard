@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Activity, DollarSign, Zap, Database, Leaf, Lightbulb, AlertTriangle, CheckCircle } from 'lucide-react';
 
+// TypeScript Interfaces
 interface SummaryData {
   total_requests: number;
   cache_hits: number;
@@ -40,6 +41,7 @@ function App() {
         setDepartments(deptsData);
         setError(null);
       } catch (err) {
+        // בודקים באופן בטוח האם השגיאה היא אכן אובייקט שגיאה תקני
         if (err instanceof Error) {
           setError(err.message);
         } else {
@@ -55,6 +57,7 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // --- Dynamic Insights Engine ---
   const generateInsights = () => {
     const insights = [];
     if (!departments.length || !summary) return insights;
@@ -67,8 +70,8 @@ function App() {
     if (utilization > 75) {
       insights.push({
         icon: <AlertTriangle className="text-[#E50914]" size={18} />,
-        text: `Critical Alert: ${highestSpender.department_name} utilized ${utilization.toFixed(1)}% of allocation.`,
-        borderColor: "border-[#E50914]/50",
+        text: `Budget Alert: ${highestSpender.department_name} utilized ${utilization.toFixed(1)}% of allocation.`,
+        borderColor: "border-[#E50914]/40",
         bg: "bg-[#E50914]/10"
       });
     }
@@ -77,24 +80,24 @@ function App() {
       insights.push({
         icon: <Lightbulb className="text-zinc-400" size={18} />,
         text: `Optimization opportunity: Cache hit rate is ${summary.cache_hit_rate}%. Adjust vector threshold to 0.80.`,
-        borderColor: "border-[#333333]",
-        bg: "bg-[#181818]"
+        borderColor: "border-[#444444]",
+        bg: "bg-[#222222]"
       });
     } else {
       insights.push({
-        icon: <CheckCircle className="text-zinc-300" size={18} />,
+        icon: <CheckCircle className="text-white/80" size={18} />,
         text: `System optimal: Memory efficiency is maintaining a ${summary.cache_hit_rate}% hit rate.`,
-        borderColor: "border-[#333333]",
-        bg: "bg-[#181818]"
+        borderColor: "border-[#444444]",
+        bg: "bg-[#222222]"
       });
     }
 
     if (ecoMode) {
       insights.push({
-        icon: <Leaf className="text-[#E50914]" size={18} />,
-        text: `Eco Mode enforced. Complex requests downgraded. Compression locked at 60%.`,
-        borderColor: "border-[#E50914]/50",
-        bg: "bg-[#E50914]/10"
+        icon: <Leaf className="text-[#10B981]" size={18} />,
+        text: `Eco Mode active. Complex requests downgraded to standard models. Compression locked at 60%.`,
+        borderColor: "border-[#10B981]/40",
+        bg: "bg-[#10B981]/10"
       });
     } else {
       insights.push({
@@ -110,17 +113,17 @@ function App() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#141414] text-zinc-400 p-4 font-sans">
-        <AlertTriangle size={32} className="mb-4 text-[#E50914]" />
-        <h2 className="text-xl font-medium mb-2 text-white">Connection Failed</h2>
-        <p className="text-sm">{error}</p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[#141414] text-zinc-400 p-4 font-sans selection:bg-[#E50914]/80 selection:text-white">
+        <AlertTriangle size={32} className="mb-4 text-[#E50914] drop-shadow-md" />
+        <h2 className="text-2xl font-semibold mb-2 text-white">Connection Failed</h2>
+        <p className="text-sm font-medium">{error}</p>
       </div>
     );
   }
 
   if (loading || !summary) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#141414] text-zinc-500 font-sans text-sm">
+      <div className="flex items-center justify-center min-h-screen bg-[#141414] text-zinc-400 font-sans text-sm selection:bg-[#E50914]/80 selection:text-white">
         <Activity className="animate-spin mr-3 text-[#E50914]" size={16} />
         Initializing TokenGuard environment...
       </div>
@@ -128,110 +131,108 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#141414] text-zinc-300 p-6 md:p-10 font-sans selection:bg-[#E50914] selection:text-white">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-[#141414] text-zinc-200 p-6 md:p-10 font-sans selection:bg-[#E50914]/80 selection:text-white">
+      {/* תוקן: max-w-screen-2xl ממרכז ומגדיל את רוחב הפורטל על מסכים רחבים */}
+      <div className="max-w-screen-2xl mx-auto rounded-3xl p-6 md:p-8">
         
-        {/* Cinematic Header */}
+        {/* Cinematic Header with Softer Borders */}
         <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#333333] pb-6">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-1.5 bg-[#181818] border border-[#333333] rounded-sm">
-                <Database size={18} className="text-[#E50914]" />
+              <div className="p-2 bg-[#2B2B2B] border border-[#444444]/60 rounded-xl shadow-lg">
+                <Database size={20} className="text-[#E50914]" />
               </div>
-              <h1 className="text-2xl font-semibold text-white tracking-tight">
+              <h1 className="text-3xl font-bold text-white tracking-tighter">
                 TokenGuard
               </h1>
-              <span className="px-2 py-0.5 rounded bg-[#222222] border border-[#333333] text-[10px] uppercase tracking-widest font-medium text-zinc-400">
+              <span className="px-3 py-1 rounded-full bg-[#333333] border border-[#444444] text-[11px] uppercase tracking-widest font-semibold text-zinc-300 shadow-inner">
                 Enterprise
               </span>
             </div>
-            <p className="text-zinc-500 text-sm">FinOps & Dynamic Routing Control Center</p>
+            <p className="text-zinc-400 text-sm font-medium">FinOps & Dynamic Routing Control Center</p>
           </div>
           
           <button 
             onClick={() => setEcoMode(!ecoMode)}
-            className={`flex items-center gap-2 px-6 py-2 rounded text-sm font-medium transition-all duration-200 border ${
+            className={`flex items-center gap-2.5 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 border shadow-lg ${
               ecoMode 
-                ? 'bg-[#E50914] text-white border-[#E50914] hover:bg-[#b80710] shadow-[0_0_15px_rgba(229,9,20,0.3)]' 
-                : 'bg-[#181818] text-zinc-400 border-[#333333] hover:text-white hover:border-zinc-500'
+                ? 'bg-[#10B981] text-white border-[#10B981] hover:bg-[#059669] shadow-[#10B981]/30' 
+                : 'bg-[#2B2B2B] text-zinc-200 border-[#444444] hover:text-white hover:border-[#666666] hover:bg-[#333333]'
             }`}
           >
-            <Leaf size={16} className={ecoMode ? 'fill-white' : ''} />
+            <Leaf size={18} className={ecoMode ? 'fill-white' : ''} />
             {ecoMode ? 'Eco Mode Active' : 'Enable Eco Mode'}
           </button>
         </header>
 
-        {/* Sharp KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div className="bg-[#181818] p-6 rounded-sm border border-[#333333] hover:border-[#555555] transition-colors">
-            <div className="flex justify-between items-start mb-4">
-              <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Costs Saved</p>
-              <DollarSign className="text-[#E50914]" size={16} />
+        {/* KPI Cards with Modern Softness & Depth */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          {[
+            // תוקן: צבע הירוק מיועד ל-Saved (דולרים). שאר הצבעים הם קרירים וניטרליים
+            { title: "Costs Saved", value: `$${summary.total_usd_saved.toFixed(2)}`, icon: <DollarSign className="text-[#10B981]" size={20} />, hoverColor: "#10B981" },
+            { title: "Hit Rate", value: `${summary.cache_hit_rate}%`, sub: `/ ${summary.cache_hits} responses`, icon: <Zap className="text-[#22D3EE]" size={20} />, hoverColor: "#22D3EE" },
+            { title: "Total Requests", value: summary.total_requests, icon: <Activity className="text-[#818CF8]" size={20} />, hoverColor: "#818CF8" }
+          ].map((item, idx) => (
+            <div key={idx} className="bg-[#2B2B2B] p-7 rounded-2xl border border-[#444444]/60 shadow-2xl transition-all duration-300 hover:scale-[1.01] hover:shadow-[#000000]/60 group" style={{ borderColor: item.hoverColor + '60' }}>
+              <div className="flex justify-between items-start mb-5">
+                <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">{item.title}</p>
+                <div className="p-2 bg-[#1A1A1A] rounded-lg border border-[#333333]" style={{ borderColor: item.hoverColor + '50' }}>
+                  {item.icon}
+                </div>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <h3 className="text-4xl font-extrabold text-white tracking-tighter drop-shadow-sm">
+                  {item.value}
+                </h3>
+                {item.sub && <span className="text-xs font-medium text-zinc-500">{item.sub}</span>}
+              </div>
             </div>
-            <h3 className="text-3xl font-semibold text-white tracking-tight">
-              ${summary.total_usd_saved.toFixed(2)}
-            </h3>
-          </div>
-
-          <div className="bg-[#181818] p-6 rounded-sm border border-[#333333] hover:border-[#555555] transition-colors">
-            <div className="flex justify-between items-start mb-4">
-              <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Hit Rate</p>
-              <Zap className="text-zinc-600" size={16} />
-            </div>
-            <div className="flex items-baseline gap-2">
-              <h3 className="text-3xl font-semibold text-white tracking-tight">
-                {summary.cache_hit_rate}%
-              </h3>
-              <span className="text-xs text-zinc-600">/ {summary.cache_hits} responses</span>
-            </div>
-          </div>
-
-          <div className="bg-[#181818] p-6 rounded-sm border border-[#333333] hover:border-[#555555] transition-colors">
-            <div className="flex justify-between items-start mb-4">
-              <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Total Requests</p>
-              <Activity className="text-zinc-600" size={16} />
-            </div>
-            <h3 className="text-3xl font-semibold text-white tracking-tight">
-              {summary.total_requests}
-            </h3>
-          </div>
+          ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Main Chart */}
-          <div className="lg:col-span-2 bg-[#181818] p-6 rounded-sm border border-[#333333]">
-            <h2 className="text-sm font-medium text-zinc-400 mb-6 uppercase tracking-wider">Budget vs. Actual</h2>
-            <div className="h-[300px] w-full">
+          {/* Main Chart with Softer Grid */}
+          <div className="lg:col-span-2 bg-[#2B2B2B] p-7 rounded-2xl border border-[#444444]/60 shadow-2xl">
+            <h2 className="text-sm font-semibold text-zinc-300 mb-8 uppercase tracking-wider">Budget vs. Actual</h2>
+            <div className="h-[320px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={departments} margin={{ top: 0, right: 0, left: -20, bottom: 0 }} barGap={4}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#2A2A2A" />
-                  <XAxis dataKey="department_name" axisLine={false} tickLine={false} tick={{ fill: '#71717a', fontSize: 12 }} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tickFormatter={(value) => `$${value}`} tick={{ fill: '#71717a', fontSize: 12 }} />
+                <BarChart data={departments} margin={{ top: 0, right: 0, left: -20, bottom: 0 }} barGap={6}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#3A3A3A" />
+                  <XAxis dataKey="department_name" axisLine={false} tickLine={false} tick={{ fill: '#909090', fontSize: 12, fontWeight: 500 }} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tickFormatter={(value) => `$${value}`} tick={{ fill: '#909090', fontSize: 12, fontWeight: 500 }} />
                   <Tooltip 
-                    cursor={{fill: '#222222', opacity: 0.5}}
-                    contentStyle={{ backgroundColor: '#141414', borderColor: '#333333', borderRadius: '4px', color: '#fff', fontSize: '12px', padding: '12px' }}
-                    itemStyle={{ color: '#e4e4e7' }}
+                    cursor={{fill: '#333333', opacity: 0.6}}
+                    contentStyle={{ backgroundColor: '#141414', borderColor: '#444444', borderRadius: '12px', color: '#fff', fontSize: '13px', padding: '14px', boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.7)' }}
+                    itemStyle={{ color: '#e4e4e7', fontWeight: 500 }}
                   />
-                  <Legend wrapperStyle={{ fontSize: '12px', color: '#71717a', paddingTop: '20px' }} iconType="circle" iconSize={8} />
+                  {/* תוקן: המקרא משתמש בטקסט ניטרלי יותר עכשיו */}
+                  <Legend wrapperStyle={{ fontSize: '12px', color: '#e2e8f0', paddingTop: '25px', fontWeight: 500 }} iconType="circle" iconSize={8} />
                   
-                  {/* צבעי הגרף: כסף כהה לתקציב, אדום דרמטי לבזבוז */}
-                  <Bar dataKey="monthly_budget" name="Allocation" fill="#404040" radius={[2, 2, 0, 0]} maxBarSize={40} />
-                  <Bar dataKey="current_spending" name="Utilized" fill="#E50914" radius={[2, 2, 0, 0]} maxBarSize={40} />
+                  {/* צבעי הגרף: כחול ספיר (Allocation) מול אדום נטפליקס (Utilized) */}
+                  <Bar dataKey="monthly_budget" name="Allocation" fill="#818CF8" radius={[6, 6, 0, 0]} maxBarSize={45} />
+                  <Bar dataKey="current_spending" name="Utilized" fill="#E50914" radius={[6, 6, 0, 0]} maxBarSize={45} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </div>
 
-          {/* Cinematic Insights */}
-          <div className="flex flex-col gap-4">
-            <h2 className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-2">Active Telemetry</h2>
-            {generateInsights().map((insight, index) => (
-              <div key={index} className={`p-4 rounded-sm border-l-2 border-y border-r border-r-[#333333] border-y-[#333333] flex gap-3 ${insight.borderColor} ${insight.bg}`}>
-                <div className="mt-0.5 shrink-0">{insight.icon}</div>
-                <p className="text-sm text-zinc-300 leading-relaxed">{insight.text}</p>
-              </div>
-            ))}
+          {/* Cinematic Insights Panel */}
+          <div className="bg-[#2B2B2B] p-7 rounded-2xl border border-[#444444]/60 shadow-2xl flex flex-col">
+            <h2 className="text-sm font-semibold text-zinc-300 mb-6 uppercase tracking-wider flex items-center gap-2">
+              <Activity className="text-zinc-500" size={16} />
+              Active Telemetry
+            </h2>
+            <div className="flex flex-col gap-5 overflow-y-auto pr-1">
+              {generateInsights().map((insight, index) => (
+                <div key={index} className={`p-5 rounded-xl border border-[#444444]/50 flex gap-4 transition-all duration-300 ${insight.borderColor} ${insight.bg}`}>
+                  <div className="mt-0.5 shrink-0 p-1.5 bg-[#1A1A1A]/70 rounded-lg border border-[#333333]/50">
+                    {insight.icon}
+                  </div>
+                  <p className="text-sm text-white/90 leading-relaxed font-medium tracking-wide">{insight.text}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
         </div>

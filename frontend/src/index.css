@@ -4,7 +4,37 @@
 
 body {
   background-color: #f8fafc;
-  color: #0f172a;
+  color: #0f46d3;
   margin: 0;
   font-family: Inter, system-ui, sans-serif;
+}@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* הגדרות בסיס למניעת הבזקים בטעינה והתאמה לעיצוב שבחרנו */
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #141414;
+  color: #f4f4f5;
+  color-scheme: dark; /* אומר לדפדפן שאנחנו בדארק מוד */
+}
+
+/* --- עיצוב פס גלילה מותאם אישית --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333; 
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555555; 
 }
