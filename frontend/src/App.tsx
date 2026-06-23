@@ -153,7 +153,20 @@ function App() {
           </div>
           
           <button 
-            onClick={() => setEcoMode(!ecoMode)}
+            onClick={async () => {
+              const newState = !ecoMode;
+              setEcoMode(newState); // עדכון מיידי במסך לתחושת מהירות
+              try {
+                await fetch('http://127.0.0.1:8000/config/eco', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ enabled: newState })
+                });
+              } catch (err) {
+                console.error("Failed to toggle Eco Mode on server", err);
+                setEcoMode(!newState); // החזרה למצב הקודם אם השרת נפל
+              }
+            }}
             className={`flex items-center gap-2.5 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 border shadow-lg ${
               ecoMode 
                 ? 'bg-[#10B981] text-white border-[#10B981] hover:bg-[#059669] shadow-[#10B981]/30' 

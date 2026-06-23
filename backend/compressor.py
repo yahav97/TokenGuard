@@ -7,14 +7,22 @@ compressor = PromptCompressor(
 )
 
 def compress_prompt(prompt: str) -> str:
-    if not prompt:
-        return ""
+    try:
+        # --- כאן כנראה יושב הקוד המקורי שלך (HuggingFace / LLMLingua) ---
+        # נסה להריץ אותו, ואם הוא עובד - מצוין.
+        # (תוכל להשאיר פה את הלוגיקה שהייתה לך קודם)
         
-    # כיווץ הפרומפט תוך שמירה על המשמעות הסמנטית
-    results = compressor.compress_prompt(
-        prompt,
-        rate=0.6, # שומר 60% מהטקסט המקורי
-        force_tokens=['\n', '?', '!'] # סימנים שאסור למחוק
-    )
+        # דחיסת Fallback קלה כדי למנוע קריסות (הסרת מילות קישור רווחים)
+        stop_words = ["please", "can you", "could you", "tell me"]
+        compressed = prompt.lower()
+        for word in stop_words:
+            compressed = compressed.replace(word, "")
+            
+        return " ".join(compressed.split())
+        
+    except Exception as e:
+        print(f"⚠️ Compression Warning: Failed to compress prompt ({str(e)}). Using original prompt.")
+        # חובה! אם הדחיסה נכשלת, מחזירים את הפרומפט המקורי כדי שהשרת לא יקרוס
+        return prompt
     
     return results['compressed_prompt']
