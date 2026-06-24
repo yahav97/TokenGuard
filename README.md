@@ -15,7 +15,7 @@ LLM API costs can spiral out of control without proper observability and routing
 
 The system utilizes native SDKs (Python/TypeScript) to send prompts to a **FastAPI** backend. The gateway evaluates prompt complexity, routes requests to the most cost-effective model across multiple providers (OpenAI, Anthropic, Google), and leverages **Semantic Caching** to prevent redundant calls. A secure **React** dashboard visualizes real-time budget utilization and savings.
 
-## ✨ Core Features
+## ✨ Key Features
 
 * **🔀 Dynamic Multi-Model Routing:** Automatically calculates prompt complexity and routes requests to the most appropriate provider (e.g., `gemini-3.1-flash-lite` for simple tasks, `gpt-4o` or `claude-3-5-sonnet` for complex logic).
 * **🧠 Semantic Caching:** Prevents redundant API calls by caching responses. Conceptually similar queries return a cached response, reducing API costs to $0 regardless of the underlying model.
@@ -62,3 +62,76 @@ Client App (SDK)    → POST /gateway/generate
 Backend             → OpenAI / Anthropic / Gemini (Fetch AI Response)
 Backend             → DB (Log Telemetry & Cost)
 React Dashboard     ← GET /analytics (Visualizes Data)
+```
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+* Python 3.11+ 
+* Node.js & npm (recent version)
+* API Keys for your preferred AI providers (OpenAI, Anthropic, Google)
+* Git
+
+### 1. Clone the repository:
+```bash
+git clone [https://github.com/yahav97/TokenGuard.git](https://github.com/yahav97/TokenGuard.git)
+cd TokenGuard
+```
+
+### 2. Backend Setup (FastAPI Gateway)
+```bash
+cd backend
+python -m venv venv
+
+# Windows
+.\venv\Scripts\activate
+# Mac/Linux
+source venv/bin/activate
+
+pip install -r requirements.txt
+```
+In a new `.env` file inside the `backend` directory, add the keys for the providers you want to use:
+```properties
+OPENAI_API_KEY=your_openai_key_here
+ANTHROPIC_API_KEY=your_anthropic_key_here
+GOOGLE_API_KEY=your_gemini_key_here
+```
+Run the gateway:
+```bash
+python main.py
+```
+
+### 3. Frontend Setup (React Dashboard)
+Open a new terminal and start the UI:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+*Default Login Credentials:*
+* **Workspace ID:** `admin`
+* **Access Key:** `enterprise2026`
+
+## 💻 Integration Examples
+
+**Python SDK:**
+```python
+from backend.sdk import TokenGuardClient
+
+tg = TokenGuardClient(base_url="[http://127.0.0.1:8000](http://127.0.0.1:8000)")
+response = tg.generate(department_key="dev", prompt="Analyze this architecture.")
+print(response.get('source')) # e.g., gpt-4o or claude-3-5-sonnet
+```
+
+**TypeScript SDK:**
+```typescript
+import { TokenGuardClient } from './web_sdk/sdk';
+
+const tg = new TokenGuardClient("[http://127.0.0.1:8000](http://127.0.0.1:8000)");
+const result = await tg.generate("marketing", "Write a tweet.");
+```
+
+## 👨‍💻 Authors
+
+* **Yahav Simon** — [GitHub](https://github.com/yahav97)
