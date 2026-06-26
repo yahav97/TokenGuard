@@ -5,7 +5,8 @@ class TokenGuardClient:
     TokenGuard Enterprise SDK Client.
     Integrates FinOps protection, Semantic Cache, and Dynamic Routing into any LLM pipeline.
     """
-    def __init__(self, base_url: str = "http://127.0.0.1:8000"):
+    def __init__(self, api_key: str, base_url: str = "http://127.0.0.1:8000"):
+        self.api_key = api_key
         self.base_url = base_url
 
     def generate(self, department_key: str, prompt: str) -> dict:
@@ -18,9 +19,13 @@ class TokenGuardClient:
             "prompt": prompt
         }
         
+        headers = {
+            "Content-Type": "application/json",
+            "X-API-Key": self.api_key
+        }
+        
         try:
-            response = requests.post(url, json=payload)
-            # אם השרת מחזיר שגיאה (למשל 500) זה יקפוץ לכאן
+            response = requests.post(url, json=payload, headers=headers)
             response.raise_for_status() 
             return response.json()
         except requests.exceptions.RequestException as e:
