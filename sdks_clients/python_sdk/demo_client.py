@@ -1,13 +1,12 @@
 import time
 from sdk import TokenGuardClient
 
-# אתחול ה-SDK עם ה-API Key המוגדר של האדמין
 tg = TokenGuardClient(api_key="tg-sk-admin123456789", base_url="http://127.0.0.1:8000")
-
 prompts_to_test = [
-    {"dept": "dept_support_003", "prompt": "Give me a NEW quote for athletes."},
-    {"dept": "dept_marketing_002", "prompt": "Write a SHORT blurb about our new AI engine."},
-    {"dept": "dept_rnd_001", "prompt": "How do we calculate risk in Python?"}
+    {"dept": "dept_support_003", "prompt": "What is the formula for the area of a circle?"},
+    {"dept": "dept_marketing_002", "prompt": "Suggest three creative names for a new vegan bakery."},
+    {"dept": "dept_rnd_001", "prompt": "Please design a comprehensive, production-ready microservices architecture. You must include detailed specifications for Kubernetes deployment configurations, a robust CI/CD pipeline using GitHub Actions, advanced JWT-based authentication with role-based access control, distributed tracing implementation utilizing OpenTelemetry, and a complete disaster recovery strategy for a multi-region PostgreSQL cluster."},
+    {"dept": "dept_marketing_002", "prompt": "Suggest three creative names for a new vegan bakery."}
 ]
 
 print("🚀 Starting TokenGuard Live Testing Client...\n")

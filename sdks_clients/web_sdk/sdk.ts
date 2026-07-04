@@ -1,9 +1,9 @@
-// web_sdk/sdk.ts
-
 export class TokenGuardClient {
+    private apiKey: string;
     private baseUrl: string;
 
-    constructor(baseUrl: string = "http://127.0.0.1:8000") {
+    constructor(apiKey: string, baseUrl: string = "http://127.0.0.1:8000") {
+        this.apiKey = apiKey;
         this.baseUrl = baseUrl;
     }
 
@@ -13,6 +13,7 @@ export class TokenGuardClient {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-API-Key': this.apiKey // <-- הוספנו את זה!
                 },
                 body: JSON.stringify({
                     department_key: departmentKey,

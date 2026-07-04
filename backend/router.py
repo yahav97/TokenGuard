@@ -2,11 +2,10 @@ import re
 
 class DynamicRouter:
     def __init__(self):
-        # מחירון סימולטיבי לדור המודלים העדכני של גוגל
         self.model_costs = {
-            "gemini-3.1-flash-lite": 0.075, # הזול והמהיר ביותר
-            "gemini-3.5-flash": 0.35,       # ממוצע ואיכותי
-            "gemini-3.1-pro": 3.50          # מודל חשיבה מתקדם ויקר
+            "gemini-3.1-flash-lite": 0.075,   
+            "gemini-3.5-flash": 0.35,       
+            "gemini-3.1-pro": 3.50         
         }
 
     def calculate_complexity(self, prompt: str) -> float:

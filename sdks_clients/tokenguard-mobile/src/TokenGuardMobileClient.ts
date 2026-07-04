@@ -5,7 +5,7 @@ export class TokenGuardMobileClient {
     private baseUrl: string;
 
     
-    constructor(apiKey: string, baseUrl: string = "192.168.1.223") {
+    constructor(apiKey: string, baseUrl: string = "http://localhost:8000") {
         this.apiKey = apiKey;
         this.baseUrl = baseUrl;
     }
