@@ -2,6 +2,32 @@
 
 > **Shifting AI Integration from Unpredictable Costs to Managed Enterprise FinOps.**
 
+## 🎬 Project Demonstrations
+
+Check out TokenGuard in action across different platforms:
+
+| Feature | Video Link |
+| :--- | :--- |
+| 🌐 **Admin Web Dashboard** | [Watch Demo](https://drive.google.com/file/d/1F20bem0JLowrUa0lWVp1LTTA4HfAVn_K/view?usp=drive_link) |
+| 🌿 **Eco-Mode Cost Saving** | [Watch Demo](https://drive.google.com/file/d/1rwiZjLxd-tm6KWD16BYjupekKjn89u3Z/view?usp=drive_link) |
+| 📱 **Mobile App (React Native)** | [Watch Demo](https://drive.google.com/file/d/11C4CCDRk2VOTFmwhYjzF9Xj9H3qIYydA/view?usp=drive_link) |
+| 🐍 **Python SDK & Automation** | [Watch Demo](https://drive.google.com/file/d/1bw2U_NCB_OsE5jt_m8ngt9QEU_dNsX7Y/view?usp=drive_link) |
+
+---
+
+## 📸 Screenshots
+
+### Admin Dashboard
+The central command center for AI telemetry and budget management.
+![Dashboard View](./images/dashboard.png)
+
+### Secure Login
+Enterprise-grade authentication for workspace access.
+![Login View](./images/loginScreen.png)
+
+---
+
+
 [![Python](https://img.shields.io/badge/Python-Backend-3776AB.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/Gateway-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/Dashboard-React-61DAFB.svg)](https://reactjs.org/)
