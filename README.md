@@ -8,7 +8,7 @@ Check out TokenGuard in action across different platforms:
 
 | Feature | Video Link |
 | :--- | :--- |
-| 🌐 **Admin Web Dashboard** | [Watch Demo](https://drive.google.com/file/d/1F20bem0JLowrUa0lWVp1LTTA4HfAVn_K/view?usp=drive_link) |
+| 🌐 **Web (TypeScript & react)** | [Watch Demo](https://drive.google.com/file/d/1F20bem0JLowrUa0lWVp1LTTA4HfAVn_K/view?usp=drive_link) |
 | 🌿 **Eco-Mode Cost Saving** | [Watch Demo](https://drive.google.com/file/d/1rwiZjLxd-tm6KWD16BYjupekKjn89u3Z/view?usp=drive_link) |
 | 📱 **Mobile App (React Native)** | [Watch Demo](https://drive.google.com/file/d/11C4CCDRk2VOTFmwhYjzF9Xj9H3qIYydA/view?usp=drive_link) |
 | 🐍 **Python SDK & Automation** | [Watch Demo](https://drive.google.com/file/d/1bw2U_NCB_OsE5jt_m8ngt9QEU_dNsX7Y/view?usp=drive_link) |
