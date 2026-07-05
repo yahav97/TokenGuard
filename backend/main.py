@@ -1,3 +1,4 @@
+# main backend file - handles auth, AI gateway, and dashboard analytics
 import uvicorn
 from fastapi import FastAPI, HTTPException, Header, Security, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,6 +23,7 @@ from database import (
 
 app = FastAPI(title="TokenGuard Enterprise API", version="1.0")
 
+# lets the react dashboard call us from localhost
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], 
@@ -30,15 +32,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-semantic_cache = SemanticCache(threshold=0.85)
+semantic_cache = SemanticCache(threshold=0.85)  # 0.85 = how similar two prompts need to be for a cache hit
 llm_router = DynamicRouter()
 
 GLOBAL_CONFIG = {
-    "eco_mode": False
+    "eco_mode": False  # toggled from the dashboard
 }
 
 api_key_header = APIKeyHeader(name="X-API-Key")
 
+# SDK clients must send X-API-Key header
 def get_current_user_from_api_key(api_key: str = Security(api_key_header)):
     db = SessionLocal()
     try:
@@ -104,11 +107,13 @@ def toggle_eco_mode(request: EcoModeRequest):
     print(f"Eco Mode turned {state}!")
     return {"status": "success", "eco_mode": request.enabled}
 
+# core flow: cache check -> compress -> route model -> call LLM -> save to cache
 @app.post("/gateway/generate")
 def generate_ai_response(request: AIMessageRequest, user: User = Depends(get_current_user_from_api_key)):
     try:
         print(f"\n--- [New Request] Dept: {request.department_key} | User: {user.username} ---")
         
+        # return early if we already answered something similar
         cached_resp = semantic_cache.lookup(request.prompt)
         if cached_resp:
             print("Cache hit!")
@@ -118,6 +123,7 @@ def generate_ai_response(request: AIMessageRequest, user: User = Depends(get_cur
         compressed_prompt = compress_prompt(request.prompt)
         print(f"Prompt compressed: '{compressed_prompt}'")
         
+        # eco mode skips the router and always picks the cheapest model
         if GLOBAL_CONFIG["eco_mode"]:
             print("ECO MODE ACTIVE: Forcing cost-efficient model.")
             selected_model = "gemini-3.1-flash-lite" 
@@ -138,6 +144,7 @@ def generate_ai_response(request: AIMessageRequest, user: User = Depends(get_cur
         print(f"Server error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# dashboard endpoints - frontend sends username in x-user-id header
 @app.get("/analytics/summary")
 def read_analytics_summary(x_user_id: str = Header(None)):
     if not x_user_id:

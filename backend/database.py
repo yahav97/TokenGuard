@@ -1,3 +1,4 @@
+# postgres models + helper functions for users, departments, and request logs
 import os
 import uuid
 import secrets
@@ -9,12 +10,13 @@ import bcrypt
 import uuid
 
 load_dotenv()
-DATABASE_URL = os.getenv("DATABASE_URL") or "postgresql://postgres:mysecretpassword@localhost:5433/tokenguard_db"
+DATABASE_URL = os.getenv("DATABASE_URL") or "postgresql://postgres:mysecretpassword@localhost:5433/tokenguard_db"  # local default
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
+# each user owns departments and has an api key for the SDK
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
@@ -31,6 +33,7 @@ class Department(Base):
     monthly_budget = Column(Float, nullable=False)
     current_spending = Column(Float, default=0.0)
 
+# every AI request gets logged here for the dashboard charts
 class Transaction(Base):
     __tablename__ = "transactions"
     id = Column(Integer, primary_key=True, index=True)
@@ -65,6 +68,7 @@ def register_new_user(username: str, password_raw: str):
         if db.query(User).filter(User.username == username).first():
             return {"error": "Username is already taken"}
         
+        # new user gets an api key + a default department to start with
         new_api_key = f"tg-sk-{secrets.token_urlsafe(16)}"
         hashed_pw = hash_password(password_raw)
         
@@ -96,6 +100,7 @@ def init_db():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
+        # seed admin + sample departments on first run
         if db.query(User).count() == 0:
             admin_hash = hash_password("enterprise2026")
             admin_user = User(username="admin", password_hash=admin_hash, role="admin", api_key="tg-sk-admin123456789")
@@ -124,10 +129,11 @@ def log_transaction(department_key: str, prompt: str, response: str, model_used:
         )
         db.add(new_tx)
         
+        # only charge spending for real API calls, not cache hits
         if not is_cached:
             dept = db.query(Department).filter(Department.department_key == department_key).first()
             if dept:
-                dept.current_spending += 150.0 
+                dept.current_spending += 150.0  # flat cost per request for now
                 print(f"Success: Found department '{department_key}', updated spending to {dept.current_spending}")
             else:
                 print(f"Error: Department '{department_key}' NOT FOUND in database!")
@@ -147,7 +153,7 @@ def get_analytics_summary(username: str):
         cache_hits = db.query(Transaction).filter(Transaction.department_key.in_(user_depts), Transaction.is_cached == 1).count()
         total_saved = db.query(func.sum(Transaction.cost_saved)).filter(Transaction.department_key.in_(user_depts)).scalar() or 0.0
         
-        cache_hit_rate = (cache_hits / total_requests * 100) if total_requests > 0 else 0.0
+        cache_hit_rate = (cache_hits / total_requests * 100) if total_requests > 0 else 0.0  # shown on dashboard
         return {"total_requests": total_requests, "cache_hits": cache_hits, "cache_hit_rate": round(cache_hit_rate, 2), "total_usd_saved": round(total_saved, 4)}
     finally:
         db.close()
