@@ -101,7 +101,7 @@ def init_db():
             admin_user = User(username="admin", password_hash=admin_hash, role="admin", api_key="tg-sk-admin123456789")
             db.add(admin_user)
             db.commit()
-            print("✅ Default admin user created in PostgreSQL.")
+            print("Default admin user created in PostgreSQL.")
 
         if db.query(Department).count() == 0:
             mock_departments = [
@@ -128,13 +128,13 @@ def log_transaction(department_key: str, prompt: str, response: str, model_used:
             dept = db.query(Department).filter(Department.department_key == department_key).first()
             if dept:
                 dept.current_spending += 150.0 
-                print(f"✅ Success: Found department '{department_key}', updated spending to {dept.current_spending}")
+                print(f"Success: Found department '{department_key}', updated spending to {dept.current_spending}")
             else:
-                print(f"❌ Error: Department '{department_key}' NOT FOUND in database!")
+                print(f"Error: Department '{department_key}' NOT FOUND in database!")
         db.commit()
     except Exception as e:
         db.rollback()
-        print(f"❌ Database Error in log_transaction: {e}")
+        print(f"Database error in log_transaction: {e}")
     finally:
         db.close()
 
@@ -171,7 +171,6 @@ def get_department_budgets(username: str):
 def create_new_department(owner_username: str, department_name: str, monthly_budget: float):
     db = SessionLocal()
     try:
-        # יצירת מפתח ייחודי למחלקה
         unique_id = str(uuid.uuid4())[:6]
         new_dept_key = f"dept_{owner_username}_{unique_id}"
         

@@ -1,4 +1,4 @@
-# 🛡️ TokenGuard
+# TokenGuard
 
 > **Shifting AI Integration from Unpredictable Costs to Managed Enterprise FinOps.**
 
@@ -9,21 +9,21 @@
 [![Anthropic](https://img.shields.io/badge/AI-Anthropic-CC9B7A.svg)](https://www.anthropic.com/)
 [![Gemini](https://img.shields.io/badge/AI-Gemini-orange.svg)](https://ai.google.dev/)
 
-## 📖 Overview
+## Overview
 
 LLM API costs can spiral out of control without proper observability and routing. **TokenGuard** unifies cost-management, traffic routing, and caching into one centralized **Multi-Model AI Gateway** for enterprises.
 
 The system utilizes native SDKs (Python/TypeScript) to send prompts to a **FastAPI** backend. The gateway evaluates prompt complexity, routes requests to the most cost-effective model across multiple providers (OpenAI, Anthropic, Google), and leverages **Semantic Caching** to prevent redundant calls. A secure **React** dashboard visualizes real-time budget utilization and savings.
 
-## ✨ Key Features
+## Key Features
 
-* **🔀 Dynamic Multi-Model Routing:** Automatically calculates prompt complexity and routes requests to the most appropriate provider (e.g., `gemini-3.1-flash-lite` for simple tasks, `gpt-4o` or `claude-3-5-sonnet` for complex logic).
-* **🧠 Semantic Caching:** Prevents redundant API calls by caching responses. Conceptually similar queries return a cached response, reducing API costs to $0 regardless of the underlying model.
-* **🌱 Eco Mode:** A one-click global override that forces all traffic to highly efficient, low-cost models during budget constraints.
-* **📊 Enterprise Dashboard:** Dark-mode telemetry UI showing real-time budget utilization, cache hit rates, and departmental spending.
-* **🔐 Secure Authentication:** Protected workspace access ensuring only authorized personnel can view financial telemetry.
+* **Dynamic Multi-Model Routing:** Automatically calculates prompt complexity and routes requests to the most appropriate provider (e.g., `gemini-3.1-flash-lite` for simple tasks, `gpt-4o` or `claude-3-5-sonnet` for complex logic).
+* **Semantic Caching:** Prevents redundant API calls by caching responses. Conceptually similar queries return a cached response, reducing API costs to $0 regardless of the underlying model.
+* **Eco Mode:** A one-click global override that forces all traffic to highly efficient, low-cost models during budget constraints.
+* **Enterprise Dashboard:** Dark-mode telemetry UI showing real-time budget utilization, cache hit rates, and departmental spending.
+* **Secure Authentication:** Protected workspace access ensuring only authorized personnel can view financial telemetry.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technologies |
 |-------|----------------|
@@ -40,7 +40,7 @@ The system utilizes native SDKs (Python/TypeScript) to send prompts to a **FastA
 * The Gateway handles all external API calls, evaluating complexity scores via `calculate_complexity()`.
 * Internal telemetry logic saves routing decisions, costs, and cache hits for the dashboard to consume.
 
-## 🏗️ System Architecture & Workflow
+## System Architecture & Workflow
 
 Two primary interaction layers exist within the ecosystem:
 
@@ -64,7 +64,7 @@ Backend             → DB (Log Telemetry & Cost)
 React Dashboard     ← GET /analytics (Visualizes Data)
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -113,7 +113,7 @@ npm run dev
 * **Workspace ID:** `admin`
 * **Access Key:** `enterprise2026`
 
-## 💻 Integration Examples
+## Integration Examples
 
 **Python SDK:**
 ```python
@@ -132,6 +132,6 @@ const tg = new TokenGuardClient("[http://127.0.0.1:8000](http://127.0.0.1:8000)"
 const result = await tg.generate("marketing", "Write a tweet.");
 ```
 
-## 👨‍💻 Authors
+## Authors
 
 * **Yahav Simon** — [GitHub](https://github.com/yahav97)

@@ -13,7 +13,7 @@ export class TokenGuardClient {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-API-Key': this.apiKey // <-- הוספנו את זה!
+                    'X-API-Key': this.apiKey 
                 },
                 body: JSON.stringify({
                     department_key: departmentKey,

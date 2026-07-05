@@ -1,4 +1,4 @@
-// app/index.tsx (או src/app/index.tsx)
+// app/index.tsx (or src/app/index.tsx)
 
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
@@ -9,7 +9,6 @@ export default function AppDemo() {
   const [response, setResponse] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // אתחול המערכת (החלף למפתח אמיתי שיצרת בפורטל)
   const tgClient = new TokenGuardMobileClient("tg-sk-admin123456789")
 
   const handleSendRequest = async () => {
@@ -18,13 +17,12 @@ export default function AppDemo() {
     setIsLoading(true);
     setResponse('');
     
-    // השתמש במפתח מחלקה אמיתי שיש לך בדאטה בייס (למשל המחלקה שפתחנו מקודם)
-    const result = await tgClient.generate("dept_mobile_001", prompt);
+    const result = await tgClient.generate("dept_support_003", prompt);
     
     if (result && result.status === "success") {
       setResponse(`Source: ${result.source}\n\n${result.response}`);
     } else {
-      setResponse("❌ Connection failed. Check backend terminal for errors.");
+      setResponse("Connection failed. Check backend terminal for errors.");
     }
     
     setIsLoading(false);

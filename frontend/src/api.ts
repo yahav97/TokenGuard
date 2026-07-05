@@ -1,6 +1,6 @@
 const API_BASE_URL = "http://127.0.0.1:8000";
 
-// הגדרת המבנה הטיפוסי (Type Safety) של הבקשה והתשובה
+// Request and response type definitions
 export interface AIMessageRequest {
   department_key: string;
   prompt: string;
@@ -13,7 +13,7 @@ export interface AIMessageResponse {
 }
 
 export const tokenGuardApi = {
-  // פונקציה לשליחת בקשה חדשה ל-Gateway
+  // Send a new request to the gateway
   generateResponse: async (data: AIMessageRequest): Promise<AIMessageResponse> => {
     const response = await fetch(`${API_BASE_URL}/gateway/generate`, {
       method: "POST",

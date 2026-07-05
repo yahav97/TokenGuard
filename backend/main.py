@@ -79,7 +79,7 @@ def register(request: RegisterRequest):
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
         
-    print(f"🎉 New user registered: {request.username}")
+    print(f"New user registered: {request.username}")
     return {
         "status": "success", 
         "message": "User created successfully", 
@@ -91,17 +91,17 @@ def register(request: RegisterRequest):
 def login(request: LoginRequest):
     user = get_user_by_username(request.username)
     if not user or not verify_password(request.password, user["password_hash"]):
-        print(f"🚫 Failed login attempt for user: {request.username}")
+        print(f"Failed login attempt for user: {request.username}")
         raise HTTPException(status_code=401, detail="Invalid username or password")
         
-    print(f"🔒 Successful login for user: {request.username}")
+    print(f"Successful login for user: {request.username}")
     return {"status": "success", "token": f"tokneguard-auth-token-{user['username']}"}
 
 @app.post("/config/eco")
 def toggle_eco_mode(request: EcoModeRequest):
     GLOBAL_CONFIG["eco_mode"] = request.enabled
     state = "ON" if request.enabled else "OFF"
-    print(f"🌍 Eco Mode turned {state}!")
+    print(f"Eco Mode turned {state}!")
     return {"status": "success", "eco_mode": request.enabled}
 
 @app.post("/gateway/generate")
@@ -111,19 +111,19 @@ def generate_ai_response(request: AIMessageRequest, user: User = Depends(get_cur
         
         cached_resp = semantic_cache.lookup(request.prompt)
         if cached_resp:
-            print("✅ Cache Hit! החזרת תשובה מהזיכרון.")
+            print("Cache hit!")
             log_transaction(request.department_key, request.prompt, cached_resp, "cache", 0.02, 1)
             return {"status": "success", "source": "Cache", "response": cached_resp}
 
         compressed_prompt = compress_prompt(request.prompt)
-        print(f"✂️ Prompt Compressed: '{compressed_prompt}'")
+        print(f"Prompt compressed: '{compressed_prompt}'")
         
         if GLOBAL_CONFIG["eco_mode"]:
-            print("🌿 ECO MODE ACTIVE: Forcing cost-efficient model.")
-            selected_model = "gemini-2.0-flash" 
+            print("ECO MODE ACTIVE: Forcing cost-efficient model.")
+            selected_model = "gemini-3.1-flash-lite" 
         else:
             selected_model = llm_router.route_request(compressed_prompt)
-            print(f"🔀 Routed to model: {selected_model}")
+            print(f"Routed to model: {selected_model}")
         
         ai_answer = get_ai_response(compressed_prompt, selected_model)
         if ai_answer.startswith("Error"):
@@ -135,7 +135,7 @@ def generate_ai_response(request: AIMessageRequest, user: User = Depends(get_cur
         return {"status": "success", "source": selected_model, "response": ai_answer}
 
     except Exception as e:
-        print(f"❌ Server Error: {str(e)}")
+        print(f"Server error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/analytics/summary")
@@ -170,7 +170,7 @@ def api_create_department(request: CreateDepartmentRequest, x_user_id: str = Hea
     if "error" in result:
         raise HTTPException(status_code=500, detail=result["error"])
 
-    print(f"🏢 New Workspace Created: {result['department']['department_name']} for user {x_user_id}")
+    print(f"New workspace created: {result['department']['department_name']} for user {x_user_id}")
     return result
 
 if __name__ == "__main__":

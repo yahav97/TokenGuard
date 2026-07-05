@@ -28,7 +28,7 @@ class DynamicRouter:
         score = self.calculate_complexity(prompt)
         print(f"[TokenGuard Router] Prompt complexity score: {score}")
         
-        if score >= 0.7:
+        if score >= 0.6:
              return "gemini-3.1-pro"
         elif score >= 0.3:
              return "gemini-3.5-flash"

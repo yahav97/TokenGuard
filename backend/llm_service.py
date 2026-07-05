@@ -12,11 +12,10 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 openai_client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 anthropic_client = Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
-# אתחול נכון של הספרייה החדשה שרצית
 gemini_client = genai.Client(api_key=GOOGLE_API_KEY) if GOOGLE_API_KEY else None
 
 def get_ai_response(prompt: str, model_name: str) -> str:
-    print(f"🤖 llm_service called with model: {model_name}")
+    print(f"llm_service called with model: {model_name}")
     try:
         # 1. OpenAI
         if "gpt" in model_name:
@@ -34,19 +33,18 @@ def get_ai_response(prompt: str, model_name: str) -> str:
             )
             return response.content[0].text
 
-        # 3. Google Gemini (הספרייה העדכנית)
         elif "gemini" in model_name:
             if not gemini_client: return "Error: Google API key is missing"
             
-            print(f"🚀 Sending request to Gemini ({model_name})...")
+            print(f"Sending request to Gemini ({model_name})...")
             response = gemini_client.models.generate_content(
                 model=model_name,
                 contents=prompt
             )
-            print("✅ Received response from Gemini")
+            print("Received response from Gemini")
             return response.text
             
         return f"Unknown model: {model_name}"
     except Exception as e:
-        print(f"❌ Exception in get_ai_response: {str(e)}")
+        print(f"Exception in get_ai_response: {str(e)}")
         return f"Error: {str(e)}"

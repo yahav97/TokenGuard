@@ -371,13 +371,11 @@ function App() {
         
         <header className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#333333] pb-6 relative">
           
-          {/* הילה אדומה/עדינה ברקע שנותנת עומק */}
           <div className="absolute top-0 left-0 w-64 h-64 bg-[#ea6969be] opacity-[0.03] rounded-full blur-3xl -z-10 pointer-events-none"></div>
 
           <div>
             <div className="flex items-center gap-4 mb-3">
               
-              {/* קוביית לוגו עם אפקט זריחה יוקרתי */}
               <div className="relative group">
                 <div className="absolute inset-0 bg-[#ea6969be] opacity-20 blur-lg rounded-xl group-hover:opacity-40 transition-opacity duration-500"></div>
                 <div className="relative p-3 bg-gradient-to-br from-[#2B2B2B] to-[#141414] border border-[#ea6969be]/30 rounded-xl shadow-2xl">
@@ -387,12 +385,10 @@ function App() {
               
               <div className="flex flex-col justify-center">
                 <div className="flex items-center gap-3">
-                  {/* טקסט עם גרדיאנט שמחליף את הלבן החד */}
                   <h1 className="text-4xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-500">
                     Token<span className="text-[#ea6969be]">Guard</span>
                   </h1>
                   
-                  {/* תגית Enterprise מוארת עם נקודה מהבהבת */}
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#ea6969be]/10 border border-[#ea6969be]/30 shadow-[0_0_10px_rgba(234,105,105,0.1)]">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#ea6969be] animate-pulse"></div>
                     <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#ea6969be]">

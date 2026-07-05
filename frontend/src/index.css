@@ -11,16 +11,14 @@ body {
 @tailwind components;
 @tailwind utilities;
 
-/* הגדרות בסיס למניעת הבזקים בטעינה והתאמה לעיצוב שבחרנו */
 html, body {
   margin: 0;
   padding: 0;
   background-color: #141414;
   color: #f4f4f5;
-  color-scheme: dark; /* אומר לדפדפן שאנחנו בדארק מוד */
+  color-scheme: dark; 
 }
 
-/* --- עיצוב פס גלילה מותאם אישית --- */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
