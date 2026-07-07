@@ -7,9 +7,8 @@ TokenGuard is implemented as a microservices-oriented architecture designed for 
 - **Backend Gateway:** Built with Python and FastAPI for high-performance, asynchronous REST API request handling.
 - **Database Layer:** PostgreSQL is integrated via SQLAlchemy (ORM) to securely store user credentials (hashed), department budgets, and granular telemetry logs of every AI transaction.
 - **AI Integration & Routing:** Implemented using native provider SDKs (OpenAI, Anthropic, Google GenAI). The internal Dynamic Router acts as a proxy, evaluating prompts and directing them to the relevant API based on prompt complexity heuristics.
-- **Frontend Clients:**
-  - A React/TypeScript web dashboard for administrators to monitor financial metrics.
-  - A React Native mobile application demonstrating cross-platform client integration.
+- **Frontend Web Client:** A React/TypeScript web dashboard for administrators to monitor financial metrics.
+- **Frontend Mobile Client:** A native Android application (Kotlin) demonstrating mobile client integration.
 
 ---
 
@@ -19,16 +18,16 @@ TokenGuard is implemented as a microservices-oriented architecture designed for 
 
 1. Clone the repository and navigate to the `backend` folder.
 2. Create a virtual environment: `python -m venv venv`
-3. Activate the virtual environment:
-   - Windows: `.\venv\Scripts\activate`
-   - Mac/Linux: `source venv/bin/activate`
+3. Activate the virtual environment (Windows: `.\venv\Scripts\activate`, Mac/Linux: `source venv/bin/activate`).
 4. Install all dependencies: `pip install -r requirements.txt`
 5. Create a `.env` file in the root of the backend directory with your API keys:
-   ```properties
-   OPENAI_API_KEY=your_openai_key_here
-   ANTHROPIC_API_KEY=your_anthropic_key_here
-   GOOGLE_API_KEY=your_gemini_key_here
-   ```
+
+```properties
+OPENAI_API_KEY=your_openai_key_here
+ANTHROPIC_API_KEY=your_anthropic_key_here
+GOOGLE_API_KEY=your_gemini_key_here
+```
+
 6. Run the local server: `python main.py` (The API will run on `http://127.0.0.1:8000`).
 
 ### Dashboard Setup (React Web)
@@ -63,12 +62,12 @@ Because the backend is built with FastAPI, comprehensive and interactive OpenAPI
 
 The TokenGuard ecosystem provides native wrappers to make integration seamless for developers, abstracting away the HTTP REST calls.
 
-### Python SDK (`TokenGuardClient`)
+### Python SDK (TokenGuardClient)
 
 **Initialization:**
 
 ```python
-client = TokenGuardClient(api_key: str, base_url: str = "[http://127.0.0.1:8000](http://127.0.0.1:8000)")
+client = TokenGuardClient(api_key="your_admin_key", base_url="[http://127.0.0.1:8000](http://127.0.0.1:8000)")
 ```
 
 - `api_key` (str): The authentication key provided by the TokenGuard Admin.
@@ -77,12 +76,11 @@ client = TokenGuardClient(api_key: str, base_url: str = "[http://127.0.0.1:8000]
 **Main Method:**
 `generate(department_key: str, prompt: str) -> dict`
 
-- **Parameters:**
-  - `department_key` (str): The ID of the department to which the cost should be billed.
-  - `prompt` (str): The instruction intended for the AI.
+- `department_key` (str): The ID of the department to which the cost should be billed.
+- `prompt` (str): The instruction intended for the AI.
 - **Returns:** A dictionary containing `status`, `source` (the model used or "Cache"), and `response`.
 
-### TypeScript / Web SDK (`TokenGuardWebClient`)
+### TypeScript / Web SDK (TokenGuardWebClient)
 
 **Initialization:**
 
@@ -189,14 +187,55 @@ export default function MobileAssistant() {
 }
 ```
 
+### Example 4: Native Android Integration (Kotlin)
+
+```kotlin
+import okhttp3.*
+import org.json.JSONObject
+import java.io.IOException
+
+// Using 10.0.2.2 to access the local backend from the Android Emulator
+val gatewayUrl = "[http://10.0.2.2:8000/gateway/generate](http://10.0.2.2:8000/gateway/generate)"
+val client = OkHttpClient()
+
+fun askTokenGuardAI(userPrompt: String) {
+    val jsonPayload = JSONObject().apply {
+        put("department_key", "mobile_team")
+        put("prompt", userPrompt)
+    }
+
+    val requestBody = RequestBody.create(
+        MediaType.parse("application/json"),
+        jsonPayload.toString()
+    )
+
+    val request = Request.Builder()
+        .url(gatewayUrl)
+        .addHeader("X-API-Key", "admin_key") // Secure authentication
+        .post(requestBody)
+        .build()
+
+    client.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            println("Failed to reach TokenGuard Gateway: ${e.message}")
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                if (!response.isSuccessful) throw IOException("Unexpected HTTP code $response")
+
+                val responseData = response.body()?.string()
+                println("Gateway Response: $responseData")
+            }
+        }
+    })
+}
+```
+
 ---
 
 ## 7. Other Functions (Core Internal Methods)
 
-- **Semantic Caching (`semantic_cache.py`):**
-  Before a request is routed, the system compares the new prompt against a database of previous prompts. If a semantically similar prompt is found (passing an >=85% similarity threshold), the system returns the cached answer instantly. This bypasses external APIs entirely, resulting in a cost of $0.00 and zero latency.
-- **Prompt Compression (`compressor.py`):**
-  LLM providers charge per "Input Token". This module automatically sanitizes the prompt by removing redundant filler words, unnecessary punctuation, and excessive whitespace before dispatching it to the external AI, actively reducing outbound token costs without altering the user's intent.
-
-- **Eco-Mode Override (`config/eco`):**
-  A global FinOps configuration toggle accessible via the dashboard. When a department or the organization exceeds its monthly budget, the Admin can enable Eco-Mode. Once activated, the Dynamic Router is bypassed, and all incoming requests are forcibly downgraded to the most cost-efficient model available (e.g., `gemini-3.1-flash-lite`), preventing further budget hemorrhaging while maintaining system uptime.
+- **Semantic Caching (`semantic_cache.py`):** Before a request is routed, the system compares the new prompt against a database of previous prompts. If a semantically similar prompt is found (passing an >=85% similarity threshold), the system returns the cached answer instantly. This bypasses external APIs entirely, resulting in a cost of $0.00 and zero latency.
+- **Prompt Compression (`compressor.py`):** LLM providers charge per "Input Token". This module automatically sanitizes the prompt by removing redundant filler words, unnecessary punctuation, and excessive whitespace before dispatching it to the external AI, actively reducing outbound token costs without altering the user's intent.
+- **Eco-Mode Override (`config/eco`):** A global FinOps configuration toggle accessible via the dashboard. When a department or the organization exceeds its monthly budget, the Admin can enable Eco-Mode. Once activated, the Dynamic Router is bypassed, and all incoming requests are forcibly downgraded to the most cost-efficient model available (e.g., `gemini-1.5-flash`), preventing further budget hemorrhaging while maintaining system uptime.
