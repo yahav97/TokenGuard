@@ -188,8 +188,9 @@ export default function MobileAssistant() {
   );
 }
 ```
+```
 ### Example 3: Native Android Integration (Kotlin)
-```kotlin
+kotlin
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
