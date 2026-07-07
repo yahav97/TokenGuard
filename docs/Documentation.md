@@ -188,6 +188,48 @@ export default function MobileAssistant() {
   );
 }
 ```
+### Example 3: Native Android Integration (Kotlin)
+```kotlin
+import okhttp3.*
+import org.json.JSONObject
+import java.io.IOException
+
+// Using 10.0.2.2 to access the local backend from the Android Emulator
+val gatewayUrl = "[http://10.0.2.2:8000/gateway/generate](http://10.0.2.2:8000/gateway/generate)"
+val client = OkHttpClient()
+
+fun askTokenGuardAI(userPrompt: String) {
+    val jsonPayload = JSONObject().apply {
+        put("department_key", "mobile_team")
+        put("prompt", userPrompt)
+    }
+
+    val requestBody = RequestBody.create(
+        MediaType.parse("application/json"), 
+        jsonPayload.toString()
+    )
+
+    val request = Request.Builder()
+        .url(gatewayUrl)
+        .addHeader("X-API-Key", "admin_key") // Secure authentication
+        .post(requestBody)
+        .build()
+
+    client.newCall(request).enqueue(object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            println("Failed to reach TokenGuard Gateway: ${e.message}")
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            response.use {
+                if (!response.isSuccessful) throw IOException("Unexpected HTTP code $response")
+                
+                val responseData = response.body()?.string()
+                println("Gateway Response: $responseData")
+            }
+        }
+    })
+}
 
 ---
 
